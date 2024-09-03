@@ -6,6 +6,7 @@ import Button from "@/components/patterns/Button/Button";
 import { Check, Plus, Send } from "lucide-react";
 import Link from "next/link";
 
+
 const LandingPageContent = ({ }: {}) => {
     const [showCopiedMessage, setShowCopiedMessage] = React.useState(false);
     const [showMenuBar, setShowMenuBar] = React.useState(false);
