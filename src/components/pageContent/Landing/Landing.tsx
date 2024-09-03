@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import styles from "./LandingPage.module.css";
+import styles from "./Landing.module.css";
 import Image from "next/image";
 import Divider from "@/components/patterns/Divider/Divider";
 import Button from "@/components/patterns/Button/Button";
