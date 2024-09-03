@@ -1,0 +1,66 @@
+.container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: var(--fg-base);
+}
+
+.yearlyOption {
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  border: 1px solid var(--bq-maroon);
+  background-color: var(--bq-maroon-faint);
+  padding: 12px;
+  justify-content: space-between;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.text h2 {
+  color: var(--bq-maroon);
+}
+
+.text p {
+  color: var(--fg-base);
+  font-size: 13px;
+}
+
+.checkmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  width: 24px;
+  border-radius: 100px;
+  background-color: var(--bq-maroon);
+}
+
+.checkmark svg {
+  color: var(--fg-on-accent);
+}
+
+.buttonGroup,
+.benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.benefit {
+  display: flex;
+  align-items: center;
+  color: var(--fg-muted);
+  font-size: 14px;
+  gap: 12px;
+}
+
+.benefit svg {
+  color: var(--bq-maroon);
+  flex-shrink: 0;
+}

@@ -1,0 +1,16 @@
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-base);
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

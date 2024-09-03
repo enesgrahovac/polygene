@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 20%;
+  text-align: center;
+}
+
+.container p,
+.container svg {
+  color: var(--fg-muted);
+}
+
+.container p {
+  font-size: 16px;
+}
+
+@media (max-width: 800px) {
+  .container {
+    padding: 16px 32px;
+  }
+}

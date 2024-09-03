@@ -1,0 +1,70 @@
+.container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.icon {
+  display: inline-flex;
+  align-self: center;
+  margin-right: 8px; /* Adjust spacing as needed */
+  height: 1em;
+  width:auto;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-base);
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+
+.checkbox {
+  height: 18px;
+  width: 18px;
+  background: var(--bg-base);
+  border: 1px solid var(--border-base);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.checkbox svg {
+  color: var(--fg-on-accent);
+}
+
+.checkbox.selected {
+  background-color: var(--bq-maroon);
+  border: none;
+}
+
+.container.correct {
+    background-color: #c8e6c9; /* light green background for correct answers */
+}
+
+.container.incorrect {
+    background-color: #ffccbc; /* light red background for incorrect answers */
+}
+
+.checkbox.selected.correct {
+    border-color: green; /* green border for selected correct answers */
+}
+
+.checkbox.selected.incorrect {
+    border-color: red; /* red border for selected incorrect answers */
+}

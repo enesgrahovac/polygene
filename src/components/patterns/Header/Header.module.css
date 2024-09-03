@@ -1,0 +1,32 @@
+.mainHeader {
+  display: flex;
+  gap: 8px;
+  height: 40px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.offsetHeader {
+  margin-left: -8px;
+}
+
+.titleAndMenu {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.container p {
+  color: var(--fg-muted);
+  font-size: 15px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.actionGroup {
+  gap: 8px;
+  display: flex;
+}

@@ -1,0 +1,23 @@
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-base);
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selectWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.chevron {
+  position: absolute;
+  right: 8px;
+  color: var(--fg-base);
+}
