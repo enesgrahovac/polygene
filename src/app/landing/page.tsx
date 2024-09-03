@@ -1,5 +1,6 @@
 "use client"
-import LandingPage from "@/components/pageContent/LandingPage/LandingPage";
+import LandingPage from "@/components/pageContent/Landing/Landing";
+
 export default function Home() {
   return (
     <main>
@@ -7,3 +8,4 @@ export default function Home() {
     </main>
   );
 }
+

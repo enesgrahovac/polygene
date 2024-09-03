@@ -3,7 +3,6 @@ import { createContext, useState, useContext, useEffect, ReactNode } from 'react
 import { createClient } from '@/utils/supabase/auth/client';
 import { useRouter } from 'next/navigation'
 import { getUserSubscriptionStatus, addUserdata } from '@/utils/user'
-import { numberQuizzesInFreeTrial } from '@/utils/constants'
 
 type UserContextType = {
     lastFileID: string;
