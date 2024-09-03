@@ -7,6 +7,7 @@ import { Check } from "lucide-react";
 import Button from "@/components/patterns/Button/Button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/contexts/UserContext";
 import { upgradeToPremium } from '@/utils/stripe/subscription'
 
 export interface SubscribeModalProps extends ModalProps { fromCreateQuizButton?: boolean; }
