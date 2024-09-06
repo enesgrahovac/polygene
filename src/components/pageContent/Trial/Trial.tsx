@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { cancelInference, getInferenceStatus } from "@/utils/inference";
 import Button from '@/components/patterns/Button/Button';
 import styles from './Trial.module.css';
@@ -95,38 +95,40 @@ const TrialPage = () => {
     }, [trialName, prediction]);
 
     return (
-        <div className={styles.pageContainer}>
-            <div className={styles.container}>
-                <h1>Trial: {trialName}</h1>
-                <p>Inference Results</p>
-                <div className={styles.predictionOutput}>
-                    {isCanceled ? (
-                        <div>
-                            <p>Inference was canceled.</p>
-                        </div>
-                    ) : isWaitingForInference ? (
-                        <div>
-                            <p>{statusMessage}</p>
-                        </div>
-                    ) : (
-                        <div>
-                            <p>Prediction Output: {predictionOutput}</p>
-                            <p>Prediction Time: {predictionTime} seconds</p>
-                        </div>
-                    )}
-                </div>
-                <div className={styles.buttonContainer}>
-                    {isCanceled ? (
-                        <Button label="Run another trial" onClick={() => router.push('/lab')} />
-                    ) : isWaitingForInference ? (
-                        <Button label="Cancel" onClick={cancelInferenceHandler} />
-                    ) : (
-                        <Button label="Run another trial" onClick={() => router.push('/lab')} />
-                    )}
-                </div>
+        <Suspense fallback={<div>Loading...</div>}>
+            <div className={styles.pageContainer}>
+                <div className={styles.container}>
+                    <h1>Trial: {trialName}</h1>
+                    <p>Inference Results</p>
+                    <div className={styles.predictionOutput}>
+                        {isCanceled ? (
+                            <div>
+                                <p>Inference was canceled.</p>
+                            </div>
+                        ) : isWaitingForInference ? (
+                            <div>
+                                <p>{statusMessage}</p>
+                            </div>
+                        ) : (
+                            <div>
+                                <p>Prediction Output: {predictionOutput}</p>
+                                <p>Prediction Time: {predictionTime} seconds</p>
+                            </div>
+                        )}
+                    </div>
+                    <div className={styles.buttonContainer}>
+                        {isCanceled ? (
+                            <Button label="Run another trial" onClick={() => router.push('/lab')} />
+                        ) : isWaitingForInference ? (
+                            <Button label="Cancel" onClick={cancelInferenceHandler} />
+                        ) : (
+                            <Button label="Run another trial" onClick={() => router.push('/lab')} />
+                        )}
+                    </div>
 
+                </div>
             </div>
-        </div>
+        </Suspense>
     );
 };
 
