@@ -4,7 +4,8 @@ import { useEffect, useState, Suspense } from 'react';
 import { cancelInference, getInferenceStatus } from "@/utils/inference";
 import Button from '@/components/patterns/Button/Button';
 import styles from './Trial.module.css';
-const TrialPage = () => {
+
+const TrialPageContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [trialName, setTrialName] = useState('');
@@ -23,7 +24,6 @@ const TrialPage = () => {
             setPrediction(predictionId);
         }
     }, [searchParams]);
-
 
     const getInferenceData = async () => {
         const inferenceResult = await getInferenceStatus(prediction);
@@ -80,7 +80,6 @@ const TrialPage = () => {
         }
     }
 
-
     const cancelInferenceHandler = async () => {
         const cancellationResponse = await cancelInference(prediction);
         console.log("cancellationResponse", cancellationResponse);
@@ -95,41 +94,44 @@ const TrialPage = () => {
     }, [trialName, prediction]);
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <div className={styles.pageContainer}>
-                <div className={styles.container}>
-                    <h1>Trial: {trialName}</h1>
-                    <p>Inference Results</p>
-                    <div className={styles.predictionOutput}>
-                        {isCanceled ? (
-                            <div>
-                                <p>Inference was canceled.</p>
-                            </div>
-                        ) : isWaitingForInference ? (
-                            <div>
-                                <p>{statusMessage}</p>
-                            </div>
-                        ) : (
-                            <div>
-                                <p>Prediction Output: {predictionOutput}</p>
-                                <p>Prediction Time: {predictionTime} seconds</p>
-                            </div>
-                        )}
-                    </div>
-                    <div className={styles.buttonContainer}>
-                        {isCanceled ? (
-                            <Button label="Run another trial" onClick={() => router.push('/lab')} />
-                        ) : isWaitingForInference ? (
-                            <Button label="Cancel" onClick={cancelInferenceHandler} />
-                        ) : (
-                            <Button label="Run another trial" onClick={() => router.push('/lab')} />
-                        )}
-                    </div>
-
+        <div className={styles.pageContainer}>
+            <div className={styles.container}>
+                <h1>Trial: {trialName}</h1>
+                <p>Inference Results</p>
+                <div className={styles.predictionOutput}>
+                    {isCanceled ? (
+                        <div>
+                            <p>Inference was canceled.</p>
+                        </div>
+                    ) : isWaitingForInference ? (
+                        <div>
+                            <p>{statusMessage}</p>
+                        </div>
+                    ) : (
+                        <div>
+                            <p>Prediction Output: {predictionOutput}</p>
+                            <p>Prediction Time: {predictionTime} seconds</p>
+                        </div>
+                    )}
+                </div>
+                <div className={styles.buttonContainer}>
+                    {isCanceled ? (
+                        <Button label="Run another trial" onClick={() => router.push('/lab')} />
+                    ) : isWaitingForInference ? (
+                        <Button label="Cancel" onClick={cancelInferenceHandler} />
+                    ) : (
+                        <Button label="Run another trial" onClick={() => router.push('/lab')} />
+                    )}
                 </div>
             </div>
-        </Suspense>
+        </div>
     );
 };
+
+const TrialPage = () => (
+    <Suspense fallback={<div>Loading...</div>}>
+        <TrialPageContent />
+    </Suspense>
+);
 
 export default TrialPage;
