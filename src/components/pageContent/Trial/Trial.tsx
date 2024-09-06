@@ -129,7 +129,7 @@ const TrialPageContent = () => {
 };
 
 const TrialPage = () => (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div></div>}>
         <TrialPageContent />
     </Suspense>
 );
