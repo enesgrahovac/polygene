@@ -47,7 +47,7 @@
 }
 
 .primary {
-  background-color: var(--bq-maroon);
+  background-color: var(--accent-base);
   color: var(--fg-on-accent);
 }
 
