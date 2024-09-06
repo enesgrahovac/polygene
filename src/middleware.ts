@@ -32,7 +32,7 @@ export async function middleware(request: NextRequest) {
             return NextResponse.rewrite(new URL('/lab', request.url))
         } else {
             // Redirect to login if not authenticated
-            return NextResponse.rewrite(new URL('/landing', request.url))
+            return NextResponse.rewrite(new URL('/lab', request.url))
         }
     }
 
