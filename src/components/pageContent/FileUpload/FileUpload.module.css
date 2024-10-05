@@ -1,7 +1,9 @@
 .centeredContainer {
-  flex: 1;
+  /* flex: 1; */
   display: flex;
-  justify-content: center; /* Horizontally center-align */
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .newProjectContainer {
@@ -26,23 +28,33 @@
 .formParent {
   display: flex;
   flex-direction: column;
-  height: 600px;
+  /* height: 600px; */
+  width: 100%;
+  /* padding: 0 36px; */
+  box-sizing: border-box;
+  max-width: 1000px;
   gap: 24px;
 }
 
 .uploadMainContainer {
+  max-width: 768px;
+  width: 100%;
   background-color: rgba(0, 0, 0, 0.01);
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 12px;
+  
 }
 
 .uploadMainContent {
+    box-sizing: border-box;
   display: flex;
   flex-direction: column;
   /* justify-content: center; */
   align-items: center;
   gap: 16px;
-  margin: 64px 36px 64px 36px;
+  min-height: 250px;
+  min-width: 500px;
+  padding: 64px 36px 64px 36px;
 }
 
 .uploadButton {
@@ -81,14 +93,20 @@
 }
 
 .uploadedFileContainer {
+  box-sizing: border-box;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   border: 1px solid #ccc;
-  padding: 10px;
+  /* padding: 10px; */
   border-radius: 4px;
-  margin-top: 10px;
+  /* margin-top: 10px; */
+  max-width: 768px;
+  min-width: 500px;
+  width: 100%;
+  min-height: 250px;
+  padding: 0 36px;
 }
 
 .uploadedFileInfo {
