@@ -324,11 +324,44 @@ const UploadFileInferencePage: React.FC = () => {
         }
     };
 
-    const handleExampleClick = async (exampleNumber: number) => {
+    const fetchAndSetExampleData = async (exampleNumber: number) => {
         // const exampleUrl = `/cachedExamples/example${exampleNumber}/phenotype_prediction.json`;
         const exampleUrl = `/cachedExamples/example1/phenotype_prediction.json`;
+        const response = await fetch(exampleUrl);
+        console.log("response", response);
+        if (!response.ok) {
+            throw new Error('Failed to load example data');
+        }
 
-        console.log("exampleUrl", exampleUrl);
+        const data = await response.json();
+        console.log("data", data);
+
+        // Generate a unique prediction ID for the example
+        const predictionId = `example${exampleNumber}-${uuidv4()}`;
+
+        const inferenceData = {
+            predictionId: predictionId,
+            status: "Completed",
+            phenotypePredictionOutput: data,
+            metrics: {
+                predict_time: 0 // Example data may not have metrics
+            },
+            predictionUrl: exampleUrl,
+        };
+
+        // Update InferenceContext
+        setInference(inferenceData);
+        setPathToGenotypePhenotypeGraph('/cachedExamples/example1/genotype_phenotype_clustering.html');
+        setPathToPhenotypeGraph('/cachedExamples/example1/phenotype_clustering.html');
+    
+        setPhenotypeGraphStatus('ready');
+        setGenotypePhenotypeGraphStatus('ready');
+
+    }
+
+    const handleExampleClick = async (exampleNumber: number) => {
+        fetchAndSetExampleData(exampleNumber);
+        
         try {
             setIsLoading(true);
             setCurrentStep(0);
@@ -342,32 +375,7 @@ const UploadFileInferencePage: React.FC = () => {
             // Simulate Step 2: Processing inference
             await new Promise(resolve => setTimeout(resolve, 3000));
 
-            const response = await fetch(exampleUrl);
-            console.log("response", response);
-            if (!response.ok) {
-                throw new Error('Failed to load example data');
-            }
-
-            const data = await response.json();
-            console.log("data", data);
-
-            // Generate a unique prediction ID for the example
-            const predictionId = `example${exampleNumber}-${uuidv4()}`;
-
-            const inferenceData = {
-                predictionId: predictionId,
-                status: "Completed",
-                phenotypePredictionOutput: data,
-                metrics: {
-                    predict_time: 0 // Example data may not have metrics
-                },
-                predictionUrl: exampleUrl,
-            };
-
-            // Update InferenceContext
-            setInference(inferenceData);
-            setPathToGenotypePhenotypeGraph('/cachedExamples/example1/genotype_phenotype_clustering.html');
-            setPathToPhenotypeGraph('/cachedExamples/example1/phenotype_clustering.html');
+            
 
             setCurrentStep(2);
             setStatusMessage("Trial complete");
