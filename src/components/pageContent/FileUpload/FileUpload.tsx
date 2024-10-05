@@ -13,6 +13,8 @@ import { useInference } from "@/contexts/InferenceContext";
 import { useRouter } from 'next/navigation';
 import { InferencePayload } from "@/types/inference";
 import { TaskName } from "@/types/inference";
+import { useConfetti } from '@/contexts/ConfettiContext'; // Import the custom hook
+
 interface Errors {
     name: boolean;
     file: boolean;
@@ -28,9 +30,10 @@ const UploadFileInferencePage: React.FC = () => {
     const [dragging, setDragging] = useState<boolean>(false);
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-    const { userId } = useUser();
+    // const { userId } = useUser();
     const { setInference, setPathToGenotypePhenotypeGraph, setPathToPhenotypeGraph, setPhenotypeGraphStatus, setGenotypePhenotypeGraphStatus } = useInference();
     const router = useRouter();
+    const { triggerConfetti } = useConfetti(); // Destructure triggerConfetti from context
 
     const steps = [
         "Uploading your file...",
@@ -39,7 +42,7 @@ const UploadFileInferencePage: React.FC = () => {
     ];
 
     const warmUpModel = async () => {
-        const url = "https://bieixmjpgmddypeumebk.supabase.co/storage/v1/object/sign/uploads/public/first_of_validation-d13d9335-03ab-4f25-a70e-ceaa2407232d.h5ad?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ1cGxvYWRzL3B1YmxpYy9maXJzdF9vZl92YWxpZGF0aW9uLWQxM2Q5MzM1LTAzYWItNGYyNS1hNzBlLWNlYWEyNDA3MjMyZC5oNWFkIiwiaWF0IjoxNzI4MTUyMDI5LCJleHAiOjI2NzQyMzIwMjl9.1ydWMfDkjYOyQN2RM3cIGzVTdv3Jes5ycK8azX4T4lw&t=2024-10-05T18%3A13%3A49.157Z"
+        const url = "https://bieixmjpgmddypeumebk.supabase.co/storage/v1/object/sign/uploads/public/first_of_validation-d13d9335-03ab-4f25-a70e-ceaa2407232d.h5ad?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ1cGxvYWRzL3B1YmxpYy9maXJzdF9vZl92YWxpZGF0aW9uLWQxM2Q5MzM1LTAzYWItNGYyNS1hNzBlLWNlYWEyNDA3MjMyZC5oNWFkIiwiaWF0IjoxNzI4MTUyMDI5LCJleHAiOjI2NzQyMzIwMjl9.1ydWMfDkjYOyQN2RM3cIGzVTdv3Jes5ycK8azX4T4lw&t=2024-10-05T18%3A13%3A49.157Z";
         const inferencePayload: InferencePayload = {
             inputPath: "asdf",
             taskName: "phenotype_prediction",
@@ -49,7 +52,7 @@ const UploadFileInferencePage: React.FC = () => {
         const status = await getReplicateInferenceStatus(startedPrediction.id);
         console.log("status", status);
         return startedPrediction.id;
-    }
+    };
 
     const startInference = async (file: string, taskName: TaskName) => {
         console.log("file", file);
@@ -88,8 +91,8 @@ const UploadFileInferencePage: React.FC = () => {
         const inferenceResult = inferenceResponse ? inferenceResponse.output : null;
 
         console.log("inferenceResult", inferenceResult);
-        return inferenceResult
-    }
+        return inferenceResult;
+    };
 
     const handleClick = (eventName: string, callback: () => void) => {
         // You can add tracking here if needed
@@ -106,12 +109,12 @@ const UploadFileInferencePage: React.FC = () => {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-        
+
             // Increase the timeout duration to ensure the download completes
             setTimeout(() => {
                 URL.revokeObjectURL(url);
-            }, 30000); // 5 seconds
-        
+            }, 30000); // 30 seconds
+
             return url;
         };
 
@@ -119,10 +122,10 @@ const UploadFileInferencePage: React.FC = () => {
             // Set initial status to 'processing'
             setPhenotypeGraphStatus('processing');
             setGenotypePhenotypeGraphStatus('processing');
-    
+
             const phenotypeGraph = await runInference(fileSignedUrl, "phenotype_clustering");
-            console.log("phenotypeGraph", phenotypeGraph || "no phenotype graph"    );
-    
+            console.log("phenotypeGraph", phenotypeGraph || "no phenotype graph");
+
             if (phenotypeGraph) {
                 const phenotypeUrl = await createDownloadableFile(phenotypeGraph, 'phenotype_clustering.html');
                 setPathToPhenotypeGraph(phenotypeUrl);
@@ -132,10 +135,10 @@ const UploadFileInferencePage: React.FC = () => {
             } else {
                 setPhenotypeGraphStatus('error');
             }
-    
+
             const genotypePhenotypeGraph = await runInference(fileSignedUrl, "genotype_phenotype_clustering");
             console.log("genotypePhenotypeGraph", genotypePhenotypeGraph);
-    
+
             if (genotypePhenotypeGraph) {
                 const genotypeUrl = await createDownloadableFile(genotypePhenotypeGraph, 'genotype_phenotype_clustering.html');
                 console.log("genotypeUrl", genotypeUrl);
@@ -144,7 +147,7 @@ const UploadFileInferencePage: React.FC = () => {
             } else {
                 setGenotypePhenotypeGraphStatus('error');
             }
-    
+
             return { genotypePhenotypeGraph, phenotypeGraph };
         } catch (error) {
             console.error("Error generating graphs", error);
@@ -180,8 +183,8 @@ const UploadFileInferencePage: React.FC = () => {
             setCurrentStep(0);
             setStatusMessage(steps[0]);
 
-            const fileExtension = uploadedFile.name.split('.').pop();
-            const uniqueFilename = `public/${uploadedFile.name.split('.').slice(0, -1).join('.')}-${uuidv4()}.${fileExtension}`;
+            const fileExtension = uploadedFile!.name.split('.').pop();
+            const uniqueFilename = `public/${uploadedFile!.name.split('.').slice(0, -1).join('.')}-${uuidv4()}.${fileExtension}`;
 
             const clientUploadResult = await clientSideUpload(uploadedFile as File, uniqueFilename);
 
@@ -215,7 +218,7 @@ const UploadFileInferencePage: React.FC = () => {
             const inferenceResultObject = JSON.parse(inferenceResult);
             console.log("inferenceResultObject", inferenceResultObject);
 
-            getGraphs(clientUploadResult.path)
+            await getGraphs(clientUploadResult.path);
             // if (!userId) {
             //     throw new Error("User ID not found");
             // }
@@ -254,6 +257,8 @@ const UploadFileInferencePage: React.FC = () => {
             setCurrentStep(2);
             setStatusMessage(steps[2]);
 
+            triggerConfetti(); // Trigger global confetti
+
             // Navigate to PredictionsPage using client-side routing
             router.push(`/predictions`);
 
@@ -264,6 +269,7 @@ const UploadFileInferencePage: React.FC = () => {
         finally {
             // wait for 2 seconds
             await new Promise(resolve => setTimeout(resolve, 2000));
+            // setShowConfetti(false); // Remove local confetti state if not used
             setIsLoading(false);
         }
     };
@@ -353,15 +359,14 @@ const UploadFileInferencePage: React.FC = () => {
         setInference(inferenceData);
         setPathToGenotypePhenotypeGraph('/cachedExamples/example1/genotype_phenotype_clustering.html');
         setPathToPhenotypeGraph('/cachedExamples/example1/phenotype_clustering.html');
-    
+
         setPhenotypeGraphStatus('ready');
         setGenotypePhenotypeGraphStatus('ready');
-
-    }
+    };
 
     const handleExampleClick = async (exampleNumber: number) => {
         fetchAndSetExampleData(exampleNumber);
-        
+
         try {
             setIsLoading(true);
             setCurrentStep(0);
@@ -375,9 +380,8 @@ const UploadFileInferencePage: React.FC = () => {
             // Simulate Step 2: Processing inference
             await new Promise(resolve => setTimeout(resolve, 3000));
 
-            
-
             setCurrentStep(2);
+            triggerConfetti(); // Trigger global confetti
             setStatusMessage("Trial complete");
             await new Promise(resolve => setTimeout(resolve, 2500));
 

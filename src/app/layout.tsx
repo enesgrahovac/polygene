@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { InferenceProvider } from '@/contexts/InferenceContext'; // Import InferenceProvider
+import { InferenceProvider } from '@/contexts/InferenceContext';
+import { ConfettiProvider } from '@/contexts/ConfettiContext';
+import ConfettiCanvas from '@/components/patterns/Confetti/ConfettiCanvas'; // Corrected import path
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,8 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <InferenceProvider> {/* Wrap with InferenceProvider */}
-          {children}
+        <InferenceProvider> 
+          <ConfettiProvider> 
+            {children}
+            <ConfettiCanvas /> {/* Ensure ConfettiCanvas is included here */}
+          </ConfettiProvider>
         </InferenceProvider>
       </body>
     </html>
