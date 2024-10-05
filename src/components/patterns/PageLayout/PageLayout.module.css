@@ -1,0 +1,30 @@
+.pageLayout {
+  display: flex;
+  height: 100vh; /* Full viewport height */
+  /* flex-direction: row; */
+  overflow-x: hidden;
+
+  width: 100%;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  height: 100vh; /* Full viewport height */
+  overflow-y: auto; /* Scroll if content overflows */
+  z-index: 1000;
+}
+
+.content {
+    flex: 1;
+    z-index: 1;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    margin: 0 auto;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+}

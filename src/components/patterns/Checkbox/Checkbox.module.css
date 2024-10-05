@@ -49,6 +49,6 @@
 }
 
 .checkbox.selected {
-  background-color: var(--bq-maroon);
+  background-color: var(--accent-base);
   border: none;
 }

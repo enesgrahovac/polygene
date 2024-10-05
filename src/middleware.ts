@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // List of paths that require authentication
-    const protectedRoutes = ['/settings', '/home'];
+    const protectedRoutes = ['/settings'];
     const redirectIfAuthenticated = ['/auth'];
 
     const { data, error } = await supabase.auth.getUser()
@@ -25,14 +25,14 @@ export async function middleware(request: NextRequest) {
         return NextResponse.rewrite(new URL('/auth', request.url))
     } else if (redirectIfAuthenticated.some(path => pathname.startsWith(path)) && session) {
         // Redirect to home if authenticated
-        return NextResponse.rewrite(new URL('/home', request.url))
+        return NextResponse.rewrite(new URL('/lab', request.url))
     } else if (pathname === "/") {
         if (session) {
             // Redirect to home if authenticated
-            return NextResponse.rewrite(new URL('/home', request.url))
+            return NextResponse.rewrite(new URL('/lab', request.url))
         } else {
             // Redirect to login if not authenticated
-            return NextResponse.rewrite(new URL('/landing', request.url))
+            return NextResponse.rewrite(new URL('/lab', request.url))
         }
     }
 

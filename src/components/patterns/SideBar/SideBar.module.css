@@ -1,0 +1,114 @@
+.titleBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titleText {
+  font-family: "SF Pro Rounded", sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: normal;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #000000;
+  opacity: 1;
+}
+
+.sideBar {
+  background-color: white;
+  height: 100vh;
+  padding: 16px 32px 32px 32px;
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  border-right: 1px solid rgba(0, 0, 0, 0.25);
+  transition: width 0.3s ease;
+  overflow: visible;
+  position: relative;
+}
+
+.sideBarFull {
+  width: 300px;
+}
+
+.sideBarCollapsed {
+  width: 104px; /* Adjust as necessary for your design */
+}
+
+.sideBar .topSideBarIcons {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.bottomSideBarIcons {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Ensure specificity and importance */
+.sideBar .leftAlignButton {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start !important; /* Override center alignment */
+  width: 100%;
+}
+
+.helpTooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: auto;
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 500;
+  white-space: nowrap;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  padding: 12px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.helpTooltip a {
+  color: var(--fg-base);
+  text-decoration: none;
+}
+
+.helpTooltip a:hover {
+  text-decoration: underline;
+}
+
+.helpOption {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+  /* padding: 2px; */
+  touch-action: manipulation;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  
+  .hiddenOnMobile {
+    display: none;
+  }
+
+  .sideBar{
+    padding: 16px 16px 48px 16px;
+  }
+
+  .sideBarCollapsed {
+    width: auto; /* Adjust as necessary for your design */
+  }
+}

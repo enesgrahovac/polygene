@@ -32,12 +32,12 @@ body {
   
   a {
     text-decoration: underline;
-    color: var(--bq-maroon);
+    color: var(--accent-base);
     cursor: pointer;
   }
   
   svg {
-    stroke-width: 2.5px;
+    /* stroke-width: 2.5px; */
     color: var(--fg-base);
   }
   
@@ -47,10 +47,11 @@ body {
   }
   
   :root {
-    --bq-maroon: #D97757; /* #D97757; F1EFE7 */
-    --bq-maroon-light: #ffc3ab;
-    --bq-maroon-faint: #ffe4d9;
-    --bq-maroon-x-faint: #fffbf9;
+    --accent-base: #750014;
+    /* --accent-base: #ff1423; */
+    --accent-base-light: #ffc3ab;
+    --accent-base-faint: #ffe4d9;
+    --accent-base-x-faint: #fffbf9;
     --ff-brown: #261c15;
     --ff-lime: #c5d86d;
     --ff-beige: #0d0d0a;
@@ -85,10 +86,10 @@ body {
   
   @media (prefers-color-scheme: dark) {
     :root {
-      --bq-maroon: #e0724d;
-      --bq-maroon-light: #6e3d2f;
-      --bq-maroon-faint: #291713;
-      --bq-maroon-x-faint: #1a0a04;
+      --accent-base: #750014;
+      --accent-base-light: #6e3d2f;
+      --accent-base-faint: #291713;
+      --accent-base-x-faint: #1a0a04;
       --ff-brown: #a68c7f;
       --ff-lime: #b8c988;
       --ff-beige: #b0b29b;
@@ -151,7 +152,7 @@ body {
   input:focus,
   textarea:focus,
   select:focus {
-    outline-color: var(--bq-maroon);
+    outline-color: var(--accent-base);
   }
   
   select {
