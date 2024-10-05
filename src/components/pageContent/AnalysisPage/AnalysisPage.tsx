@@ -1,26 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styles from './AnalysisPage.module.css';
 import { useInference } from '@/contexts/InferenceContext';
 import PageLayout from "@/components/patterns/PageLayout/PageLayout";
 import Button from '@/components/patterns/Button/Button';
 import { useRouter } from 'next/navigation';
+import { PhenotypeClassification } from '@/types/inference';
 
 const AnalysisPage = () => {
-    const { inference } = useInference();
+    const { 
+        inference, 
+        pathToGenotypePhenotypeGraph, 
+        pathToPhenotypeGraph,
+        phenotypeGraphStatus,
+        genotypePhenotypeGraphStatus
+    } = useInference();
     const router = useRouter();
 
     const openGenotypePhenotypeClustering = () => {
-        window.open(inference?.pathToGenotypePhenotypeGraph, '_blank');
+        if (genotypePhenotypeGraphStatus === 'ready') {
+            window.open(pathToGenotypePhenotypeGraph, '_blank');
+        }
     };
 
     const openPhenotypeClustering = () => {
-        window.open(inference?.pathToPhenotypeGraph, '_blank');
+        if (phenotypeGraphStatus === 'ready') {
+            window.open(pathToPhenotypeGraph, '_blank');
+        }
     };
 
     return (
         <PageLayout>
             <div className={styles.pageContainer}>
-                {!inference || (!inference.pathToGenotypePhenotypeGraph && !inference.pathToPhenotypeGraph) ? (
+                {(!pathToGenotypePhenotypeGraph && !pathToPhenotypeGraph) ? (
                     <div className={styles.noData}>
                         <div>No inference data available.</div>
                         <Button
@@ -32,16 +43,18 @@ const AnalysisPage = () => {
                 ) : (
                     <>
                         <Button
-                            label="Genotype Phenotype Clustering"
+                            label={genotypePhenotypeGraphStatus === 'ready' ? "Genotype Phenotype Clustering" : "Genotype Phenotype Clustering is processing..."}
                             onClick={openGenotypePhenotypeClustering}
                             variant="ghost"
                             style={{ width: "400px" }}
+                            disabled={genotypePhenotypeGraphStatus !== 'ready'}
                         />
                         <Button
-                            label="Phenotype Clustering"
+                            label={phenotypeGraphStatus === 'ready' ? "Phenotype Clustering" : "Phenotype Clustering is processing..."}
                             onClick={openPhenotypeClustering}
                             variant="ghost"
                             style={{ width: "400px" }}
+                            disabled={phenotypeGraphStatus !== 'ready'}
                         />
                     </>
                 )}

@@ -4,13 +4,18 @@ import { useInference } from '@/contexts/InferenceContext';
 import PageLayout from "@/components/patterns/PageLayout/PageLayout";
 import Button from '@/components/patterns/Button/Button';
 import { useRouter } from 'next/navigation';
+import { PhenotypeClassification } from '@/types/inference';
+
 const PredictionsPage = () => {
     const { inference } = useInference();
-    const [phenotypeData, setPhenotypeData] = useState<any[]>([]);
+    const [phenotypeData, setPhenotypeData] = useState<PhenotypeClassification>([]);
     const router = useRouter();
     useEffect(() => {
         const fetchData = async () => {
-            if (inference?.predictionUrl) {
+            if (inference?.phenotypePredictionOutput) {
+                setPhenotypeData(inference.phenotypePredictionOutput);
+            }
+            else if (inference?.predictionUrl) {
                 try {
                     const response = await fetch(inference.predictionUrl);
                     if (!response.ok) {

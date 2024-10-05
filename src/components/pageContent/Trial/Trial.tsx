@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
-import { cancelInference, getInferenceStatus } from "@/utils/inference";
+import { cancelReplicateInference, getReplicateInferenceStatus } from "@/utils/inference";
 import Button from '@/components/patterns/Button/Button';
 import styles from './Trial.module.css';
 
@@ -26,7 +26,7 @@ const TrialPageContent = () => {
     }, [searchParams]);
 
     const getInferenceData = async () => {
-        const inferenceResult = await getInferenceStatus(prediction);
+        const inferenceResult = await getReplicateInferenceStatus(prediction);
         console.log("inferenceResult", inferenceResult);
         let inferenceStatus = inferenceResult.status;
         return {
@@ -81,7 +81,7 @@ const TrialPageContent = () => {
     }
 
     const cancelInferenceHandler = async () => {
-        const cancellationResponse = await cancelInference(prediction);
+        const cancellationResponse = await cancelReplicateInference(prediction);
         console.log("cancellationResponse", cancellationResponse);
         setIsCanceled(true);
         // router.push('/lab');

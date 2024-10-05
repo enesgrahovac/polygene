@@ -1,41 +1,60 @@
 "use server";
 import Replicate from "replicate";
+import { InferencePayload } from "@/types/inference";
 
 const replicate = new Replicate({
     auth: process.env.REPLICATE_API_TOKEN,
 });
 
-export const replicateInference = async (signedUrl: string) => {
-    console.log("in replicate inference")
-    const output = await replicate.run(
-        "enesgrahovac/perturbgene:8a2a82ae35229e8a0a6a643ad9dab1933acb7dc132378ebef696bf270eb72998",
-        {
-            input: {
-                input_path: signedUrl
-            }
-        }
-    );
-    console.log("replicateInference output", output);
-    return output;
-}
 
-export const startInference = async (signedUrl: string) => {
+
+export const startReplicateInference = async (inferencePayload: InferencePayload) => {
+    console.log("in startInference");
+  
+    console.log(inferencePayload)
+    // Set default values if not provided
+    const { inputPath, taskName, maxCells = 10, batchSize = 4 } = inferencePayload;
+
+    // Add validation for required fields
+    if (!inputPath || !taskName) {
+        throw new Error("inputPath and taskName are required fields.");
+    }
+
+    const reformattedPayload = {
+        input_path: inputPath,
+        task: taskName,
+        max_cells: maxCells,
+        batch_size: batchSize,
+    };
+
+    console.log("reformattedPayload", reformattedPayload);
+
     let prediction = await replicate.predictions.create({
-        model: "enesgrahovac/perturbgene",
-        version: "8a2a82ae35229e8a0a6a643ad9dab1933acb7dc132378ebef696bf270eb72998",
-        input: {
-            input_path: signedUrl,
-        },
-      });
+        model: process.env.REPLICATE_MODEL_NAME as string,
+        version: process.env.REPLICATE_MODEL_VERSION as string,
+        input: reformattedPayload,
+    });
+
+    // let prediction = await replicate.run(
+    //     `${process.env.REPLICATE_ACCOUNT_ID}/${process.env.REPLICATE_MODEL_NAME}:${process.env.REPLICATE_MODEL_VERSION}`,
+    //     {
+    //         input: reformattedPayload,
+    //     }
+    // )
+
+    console.log("prediction", prediction);
+    console.log("typeof prediction", typeof prediction);
+    
     return prediction;
 }
 
-export const getInferenceStatus = async (predictionId: string) => {
+export const getReplicateInferenceStatus = async (predictionId: string) => {
     let prediction = await replicate.predictions.get(predictionId);
     return prediction;
 }
 
-export const cancelInference = async (predictionId: string) => {
+export const cancelReplicateInference = async (predictionId: string) => {
     const response = await replicate.predictions.cancel(predictionId);
     return response;
 }
+

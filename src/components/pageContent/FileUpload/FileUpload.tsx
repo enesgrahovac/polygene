@@ -5,13 +5,14 @@ import TextInput from "@/components/patterns/TextInput/TextInput";
 import { Upload, XCircle, File, CheckCircle, Circle } from "lucide-react";
 import { clientSideUpload, createSupabaseSignedUrl } from "@/utils/supabase/storage/clientActions";
 import Loader from '@/components/patterns/Loader/Loader';
-import { replicateInference, startInference, getInferenceStatus } from "@/utils/inference";
+import { startReplicateInference, getReplicateInferenceStatus } from "@/utils/inference";
 import { v4 as uuidv4 } from 'uuid';
 import PageLayout from "@/components/patterns/PageLayout/PageLayout";
 import { useUser } from "@/contexts/UserContext";
 import { useInference } from "@/contexts/InferenceContext";
 import { useRouter } from 'next/navigation';
-
+import { InferencePayload } from "@/types/inference";
+import { TaskName } from "@/types/inference";
 interface Errors {
     name: boolean;
     file: boolean;
@@ -27,22 +28,134 @@ const UploadFileInferencePage: React.FC = () => {
     const [dragging, setDragging] = useState<boolean>(false);
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-    const { userId } = useUser(); 
-    const { setInference } = useInference(); 
-    const router = useRouter(); 
+    const { userId } = useUser();
+    const { setInference, setPathToGenotypePhenotypeGraph, setPathToPhenotypeGraph, setPhenotypeGraphStatus, setGenotypePhenotypeGraphStatus } = useInference();
+    const router = useRouter();
 
     const steps = [
         "Uploading your file...",
-        "Processing inference...",
+        "Running trial...",
         "Trial complete",
     ];
+
+    const warmUpModel = async () => {
+        const url = "https://bieixmjpgmddypeumebk.supabase.co/storage/v1/object/sign/uploads/public/first_of_validation-d13d9335-03ab-4f25-a70e-ceaa2407232d.h5ad?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ1cGxvYWRzL3B1YmxpYy9maXJzdF9vZl92YWxpZGF0aW9uLWQxM2Q5MzM1LTAzYWItNGYyNS1hNzBlLWNlYWEyNDA3MjMyZC5oNWFkIiwiaWF0IjoxNzI4MTUyMDI5LCJleHAiOjI2NzQyMzIwMjl9.1ydWMfDkjYOyQN2RM3cIGzVTdv3Jes5ycK8azX4T4lw&t=2024-10-05T18%3A13%3A49.157Z"
+        const inferencePayload: InferencePayload = {
+            inputPath: "asdf",
+            taskName: "phenotype_prediction",
+        };
+        const startedPrediction = await startReplicateInference(inferencePayload);
+        console.log("startedPrediction", startedPrediction);
+        const status = await getReplicateInferenceStatus(startedPrediction.id);
+        console.log("status", status);
+        return startedPrediction.id;
+    }
+
+    const startInference = async (file: string, taskName: TaskName) => {
+        console.log("file", file);
+        const signedUrl = await createSupabaseSignedUrl(file, 300);
+        console.log("signedUrl", signedUrl);
+        const inferencePayload: InferencePayload = {
+            inputPath: signedUrl,
+            taskName: taskName,
+        };
+        const startedPrediction = await startReplicateInference(inferencePayload);
+        console.log("startedPrediction", startedPrediction);
+        const status = await getReplicateInferenceStatus(startedPrediction.id);
+        console.log("status", status);
+        return startedPrediction.id;
+    };
+
+    const runInference = async (file: string, taskName: TaskName) => {
+        const predictionId = await startInference(file, taskName);
+        let inferenceResponse = null;
+        let inferenceCompleted = false;
+        while (!inferenceCompleted) {
+            inferenceResponse = await getReplicateInferenceStatus(predictionId);
+            console.log("inferenceResponse", inferenceResponse);
+            if (inferenceResponse.status === "succeeded") {
+                inferenceCompleted = true;
+            } else if (inferenceResponse.status === "failed") {
+                throw new Error("Trial failed");
+            } else if (inferenceResponse.status === "starting") {
+                setStatusMessage("GPU is warming up...");
+            } else if (inferenceResponse.status === "processing") {
+                setStatusMessage("Running trial...");
+            }
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+        const inferenceResult = inferenceResponse ? inferenceResponse.output : null;
+
+        console.log("inferenceResult", inferenceResult);
+        return inferenceResult
+    }
 
     const handleClick = (eventName: string, callback: () => void) => {
         // You can add tracking here if needed
         callback();
     };
 
+    const getGraphs = async (fileSignedUrl: string) => {
+        const createDownloadableFile = async (content: string, filename: string) => {
+            const blob = new Blob([content], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        
+            // Increase the timeout duration to ensure the download completes
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 30000); // 5 seconds
+        
+            return url;
+        };
+
+        try {
+            // Set initial status to 'processing'
+            setPhenotypeGraphStatus('processing');
+            setGenotypePhenotypeGraphStatus('processing');
+    
+            const phenotypeGraph = await runInference(fileSignedUrl, "phenotype_clustering");
+            console.log("phenotypeGraph", phenotypeGraph || "no phenotype graph"    );
+    
+            if (phenotypeGraph) {
+                const phenotypeUrl = await createDownloadableFile(phenotypeGraph, 'phenotype_clustering.html');
+                setPathToPhenotypeGraph(phenotypeUrl);
+                setPhenotypeGraphStatus('ready');
+                console.log("phenotypeUrl", phenotypeUrl || "no phenotype url");
+
+            } else {
+                setPhenotypeGraphStatus('error');
+            }
+    
+            const genotypePhenotypeGraph = await runInference(fileSignedUrl, "genotype_phenotype_clustering");
+            console.log("genotypePhenotypeGraph", genotypePhenotypeGraph);
+    
+            if (genotypePhenotypeGraph) {
+                const genotypeUrl = await createDownloadableFile(genotypePhenotypeGraph, 'genotype_phenotype_clustering.html');
+                console.log("genotypeUrl", genotypeUrl);
+                setPathToGenotypePhenotypeGraph(genotypeUrl);
+                setGenotypePhenotypeGraphStatus('ready');
+            } else {
+                setGenotypePhenotypeGraphStatus('error');
+            }
+    
+            return { genotypePhenotypeGraph, phenotypeGraph };
+        } catch (error) {
+            console.error("Error generating graphs", error);
+            setPhenotypeGraphStatus('error');
+            setGenotypePhenotypeGraphStatus('error');
+            throw error;
+        }
+    };
+
     const createInference = async () => {
+        await warmUpModel();
         const nameError = inferenceName.trim() === "";
         const fileError = uploadedFile === null;
 
@@ -62,18 +175,6 @@ const UploadFileInferencePage: React.FC = () => {
             return;
         }
 
-        const runInference = async (file: string, inferenceName: string) => {
-            console.log("file", file);
-            console.log("inferenceName", inferenceName);
-            const signedUrl = await createSupabaseSignedUrl(file, 300);
-            console.log("signedUrl", signedUrl);
-            const startedPrediction = await startInference(signedUrl);
-            console.log("startedPrediction", startedPrediction);
-            const status = await getInferenceStatus(startedPrediction.id);
-            console.log("status", status);
-            return startedPrediction.id;
-        };
-
         try {
             setIsLoading(true);
             setCurrentStep(0);
@@ -91,43 +192,64 @@ const UploadFileInferencePage: React.FC = () => {
             setCurrentStep(1);
             setStatusMessage(steps[1]);
 
-            const predictionId = await runInference(clientUploadResult.path, inferenceName);
+            const predictionId = await startInference(clientUploadResult.path, "phenotype_prediction");
+            let inferenceResponse = null;
+            let inferenceCompleted = false;
+            while (!inferenceCompleted) {
+                inferenceResponse = await getReplicateInferenceStatus(predictionId);
+                console.log("inferenceResponse", inferenceResponse);
+                if (inferenceResponse.status === "succeeded") {
+                    inferenceCompleted = true;
+                } else if (inferenceResponse.status === "failed") {
+                    throw new Error("Trial failed");
+                } else if (inferenceResponse.status === "starting") {
+                    setStatusMessage("GPU is warming up...");
+                } else if (inferenceResponse.status === "processing") {
+                    setStatusMessage("Running trial...");
+                }
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
 
-            const inferenceResult = await getInferenceStatus(predictionId);
+            const inferenceResult = inferenceResponse ? inferenceResponse.output : null;
+            // Load it to an object
+            const inferenceResultObject = JSON.parse(inferenceResult);
+            console.log("inferenceResultObject", inferenceResultObject);
+
+            getGraphs(clientUploadResult.path)
+            // if (!userId) {
+            //     throw new Error("User ID not found");
+            // }
+
+            // const response = await fetch('/api/saveInference', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({ userId, data: inferenceData })
+            // });
+
+            // if (!response.ok) {
+            //     const error = await response.json();
+            //     throw new Error(error.error || 'Failed to save inference data');
+            // }
+
+            // const responseData = await response.json();
+            // const { url } = responseData;
+
             const inferenceData = {
                 predictionId: predictionId,
-                status: inferenceResult.status,
-                output: inferenceResult.output,
-                metrics: inferenceResult.metrics
-            };
-
-            if (!userId) {
-                throw new Error("User ID not found");
-            }
-
-            const response = await fetch('/api/saveInference', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
+                status: "Completed",
+                phenotypePredictionOutput: inferenceResultObject,
+                metrics: {
+                    predict_time: 0 // Example data may not have metrics
                 },
-                body: JSON.stringify({ userId, data: inferenceData })
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Failed to save inference data');
-            }
-
-            const responseData = await response.json();
-            const { url } = responseData;
-
-            // Update InferenceContext
-            setInference({
-                ...inferenceData,
-                predictionUrl: url,
+                predictionUrl: inferenceResponse ? inferenceResponse?.urls?.get : "",
                 pathToGenotypePhenotypeGraph: '/cachedExamples/example1/genotype_phenotype_clustering.html',
                 pathToPhenotypeGraph: '/cachedExamples/example1/phenotype_clustering.html',
-            });
+            };
+
+            // Update InferenceContext
+            setInference(inferenceData);
 
             setCurrentStep(2);
             setStatusMessage(steps[2]);
@@ -211,49 +333,49 @@ const UploadFileInferencePage: React.FC = () => {
             setIsLoading(true);
             setCurrentStep(0);
             setStatusMessage("Loading example data...");
-    
+
             // Simulate Step 1: Loading example data
             await new Promise(resolve => setTimeout(resolve, 1000));
             setCurrentStep(1);
-            setStatusMessage("Processing inference...");
-    
+            setStatusMessage("Running trial...");
+
             // Simulate Step 2: Processing inference
             await new Promise(resolve => setTimeout(resolve, 3000));
-    
+
             const response = await fetch(exampleUrl);
             console.log("response", response);
             if (!response.ok) {
                 throw new Error('Failed to load example data');
             }
-    
+
             const data = await response.json();
             console.log("data", data);
-    
+
             // Generate a unique prediction ID for the example
             const predictionId = `example${exampleNumber}-${uuidv4()}`;
-    
+
             const inferenceData = {
                 predictionId: predictionId,
                 status: "Completed",
-                output: data,
+                phenotypePredictionOutput: data,
                 metrics: {
                     predict_time: 0 // Example data may not have metrics
                 },
                 predictionUrl: exampleUrl,
-                pathToGenotypePhenotypeGraph: '/cachedExamples/example1/genotype_phenotype_clustering.html',
-                pathToPhenotypeGraph: '/cachedExamples/example1/phenotype_clustering.html',
             };
-    
+
             // Update InferenceContext
             setInference(inferenceData);
-    
+            setPathToGenotypePhenotypeGraph('/cachedExamples/example1/genotype_phenotype_clustering.html');
+            setPathToPhenotypeGraph('/cachedExamples/example1/phenotype_clustering.html');
+
             setCurrentStep(2);
             setStatusMessage("Trial complete");
             await new Promise(resolve => setTimeout(resolve, 2500));
-    
+
             // Navigate to PredictionsPage using client-side routing
             router.push(`/predictions`);
-            
+
         } catch (error) {
             console.error("Error loading example data", error);
         } finally {
