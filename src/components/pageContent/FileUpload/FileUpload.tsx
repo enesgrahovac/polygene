@@ -218,7 +218,7 @@ const UploadFileInferencePage: React.FC = () => {
             const inferenceResultObject = JSON.parse(inferenceResult);
             console.log("inferenceResultObject", inferenceResultObject);
 
-            await getGraphs(clientUploadResult.path);
+            getGraphs(clientUploadResult.path);
             // if (!userId) {
             //     throw new Error("User ID not found");
             // }
