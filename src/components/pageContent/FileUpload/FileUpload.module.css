@@ -1,6 +1,5 @@
-
 .centeredContainer {
-    flex:1;
+  flex: 1;
   display: flex;
   justify-content: center; /* Horizontally center-align */
 }
@@ -170,18 +169,48 @@
   color: #333;
 }
 
-@media (max-width: 768px) {
-    .newProjectContainer {
-      padding: 16px;
-    }
-    .uploadedFileContainer {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
+.exampleFilesContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  justify-content: space-between;
+}
 
-    .topBar h1 {
-        font-size: 1.25rem;
-    }
+.exampleFile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.exampleFile:hover {
+  /* cursor: pointer; */
+  /* border: 1px solid var(--accent-base); */
+  border-radius: 8px;
+  /* background-color: var(--accent-base-light); */
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.exampleFileIcon {
+  color: var(--accent-base);
+}
+
+.exampleFileName {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .newProjectContainer {
+    padding: 16px;
   }
-  
+  .uploadedFileContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .topBar h1 {
+    font-size: 1.25rem;
+  }
+}

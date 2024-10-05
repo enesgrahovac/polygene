@@ -37,7 +37,7 @@ body {
   }
   
   svg {
-    stroke-width: 2.5px;
+    /* stroke-width: 2.5px; */
     color: var(--fg-base);
   }
   
@@ -47,7 +47,8 @@ body {
   }
   
   :root {
-    --accent-base: #D97757; /* #D97757; F1EFE7 */
+    --accent-base: #750014;
+    /* --accent-base: #ff1423; */
     --accent-base-light: #ffc3ab;
     --accent-base-faint: #ffe4d9;
     --accent-base-x-faint: #fffbf9;
@@ -85,7 +86,7 @@ body {
   
   @media (prefers-color-scheme: dark) {
     :root {
-      --accent-base: #e0724d;
+      --accent-base: #750014;
       --accent-base-light: #6e3d2f;
       --accent-base-faint: #291713;
       --accent-base-x-faint: #1a0a04;

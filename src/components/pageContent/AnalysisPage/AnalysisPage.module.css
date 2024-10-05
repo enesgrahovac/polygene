@@ -1,0 +1,17 @@
+.pageContainer {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px; 
+}
+
+/* .pageContainer button {
+    width: 200px;
+} */
+
+.noData {
+    display:flex;
+    flex-direction: column;
+    gap: 16px;
+}
