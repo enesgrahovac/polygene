@@ -13,7 +13,7 @@ export const startReplicateInference = async (inferencePayload: InferencePayload
   
     console.log(inferencePayload)
     // Set default values if not provided
-    const { inputPath, taskName, maxCells = 10, batchSize = 4 } = inferencePayload;
+    const { inputPath, taskName, maxCells = 8, batchSize = 4 } = inferencePayload;
 
     // Add validation for required fields
     if (!inputPath || !taskName) {
