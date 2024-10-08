@@ -1,0 +1,197 @@
+[
+    {
+        "Phenotype": "sex",
+        "Value": "[female]",
+        "Percentage": "50.00%"
+    },
+    {
+        "Phenotype": "sex",
+        "Value": "[male]",
+        "Percentage": "40.00%"
+    },
+    {
+        "Phenotype": "sex",
+        "Value": "[unknown]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "tissue",
+        "Value": "[blood]",
+        "Percentage": "40.00%"
+    },
+    {
+        "Phenotype": "tissue",
+        "Value": "[cerebral_cortex]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "tissue",
+        "Value": "[thymus]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "tissue",
+        "Value": "[spleen]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "tissue",
+        "Value": "[transition_zone_of_prostate]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "tissue",
+        "Value": "[primary_motor_cortex]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "tissue",
+        "Value": "[lamina_propria_of_mucosa_of_colon]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "disease",
+        "Value": "[normal]",
+        "Percentage": "50.00%"
+    },
+    {
+        "Phenotype": "disease",
+        "Value": "[COVID-19]",
+        "Percentage": "20.00%"
+    },
+    {
+        "Phenotype": "disease",
+        "Value": "[B-cell_acute_lymphoblastic_leukemia]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "disease",
+        "Value": "[benign_prostatic_hyperplasia]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "disease",
+        "Value": "[Crohn_disease]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "development_stage",
+        "Value": "[29-year-old_human_stage]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "development_stage",
+        "Value": "[7-year-old_human_stage]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "development_stage",
+        "Value": "[49-year-old_human_stage]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "development_stage",
+        "Value": "[11-month-old_human_stage]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "development_stage",
+        "Value": "[17th_week_post-fertilization_human_stage]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "development_stage",
+        "Value": "[fifth_decade_human_stage]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "development_stage",
+        "Value": "[67-year-old_human_stage]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "development_stage",
+        "Value": "[44-year-old_human_stage]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "development_stage",
+        "Value": "[14th_week_post-fertilization_human_stage]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "development_stage",
+        "Value": "[fourth_decade_human_stage]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "cell_type",
+        "Value": "[neuron]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "cell_type",
+        "Value": "[classical_monocyte]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "cell_type",
+        "Value": "[mature_gamma-delta_T_cell]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "cell_type",
+        "Value": "[early_pro-B_cell]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "cell_type",
+        "Value": "[double-positive,_alpha-beta_thymocyte]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "cell_type",
+        "Value": "[CD4-positive,_alpha-beta_T_cell]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "cell_type",
+        "Value": "[effector_CD8-positive,_alpha-beta_T_cell]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "cell_type",
+        "Value": "[mature_alpha-beta_T_cell]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "cell_type",
+        "Value": "[glutamatergic_neuron]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "cell_type",
+        "Value": "[fibroblast]",
+        "Percentage": "10.00%"
+    },
+    {
+        "Phenotype": "assay",
+        "Value": "[10x_3'_v3]",
+        "Percentage": "40.00%"
+    },
+    {
+        "Phenotype": "assay",
+        "Value": "[10x_5'_v1]",
+        "Percentage": "20.00%"
+    },
+    {
+        "Phenotype": "assay",
+        "Value": "[10x_5'_v2]",
+        "Percentage": "20.00%"
+    },
+    {
+        "Phenotype": "assay",
+        "Value": "[10x_3'_v2]",
+        "Percentage": "20.00%"
+    }
+]
