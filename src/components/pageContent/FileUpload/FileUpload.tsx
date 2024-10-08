@@ -331,10 +331,12 @@ const UploadFileInferencePage: React.FC = () => {
     };
 
     const fetchAndSetExampleData = async (exampleNumber: number) => {
-        // const exampleUrl = `/cachedExamples/example${exampleNumber}/phenotype_prediction.json`;
-        const exampleUrl = `/cachedExamples/example1/phenotype_prediction.json`;
+
+        const exampleUrl = `/cachedExamples/example${exampleNumber}/phenotype_prediction.json`;
+        // const exampleUrl = `/cachedExamples/example1/phenotype_prediction.json`;
         const response = await fetch(exampleUrl);
         console.log("response", response);
+
         if (!response.ok) {
             throw new Error('Failed to load example data');
         }
@@ -357,17 +359,19 @@ const UploadFileInferencePage: React.FC = () => {
 
         // Update InferenceContext
         setInference(inferenceData);
-        setPathToGenotypePhenotypeGraph('/cachedExamples/example1/genotype_phenotype_clustering.html');
-        setPathToPhenotypeGraph('/cachedExamples/example1/phenotype_clustering.html');
+        setPathToGenotypePhenotypeGraph(`/cachedExamples/example${exampleNumber}/genotype_phenotype_clustering.html`);
+        setPathToPhenotypeGraph(`/cachedExamples/example${exampleNumber}/phenotype_clustering.html`);
 
         setPhenotypeGraphStatus('ready');
         setGenotypePhenotypeGraphStatus('ready');
     };
 
     const handleExampleClick = async (exampleNumber: number) => {
+
         fetchAndSetExampleData(exampleNumber);
 
         try {
+
             setIsLoading(true);
             setCurrentStep(0);
             setStatusMessage("Loading example data...");
