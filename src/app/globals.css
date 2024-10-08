@@ -84,7 +84,7 @@ body {
     --border-muted: #e3e3e3;
   }
   
-  @media (prefers-color-scheme: dark) {
+  /* @media (prefers-color-scheme: dark) {
     :root {
       --accent-base: #750014;
       --accent-base-light: #6e3d2f;
@@ -102,26 +102,22 @@ body {
       --overlay: rgba(0, 0, 0, 0.75);
       --hover-bg: rgba(255, 255, 255, 0.05);
   
-      /* Foreground */
       --fg-base: #fff;
       --fg-muted: #b2b2b2;
       --fg-faint: #525252;
   
       --fg-error: red;
   
-      /* Background */
       --bg-base: #121212;
       --bg-muted: #323232;
       --bg-faint: #1b1b1b;
   
-      /* Border */
       --border-base: #323232;
       --border-muted: #232323;
   
-      /* Accent */
       --fg-on-accent: #fff;
     }
-  }
+  } */
   
   input,
   textarea,
