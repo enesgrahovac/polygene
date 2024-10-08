@@ -27,7 +27,6 @@ const TrialPageContent = () => {
 
     const getInferenceData = async () => {
         const inferenceResult = await getReplicateInferenceStatus(prediction);
-        console.log("inferenceResult", inferenceResult);
         let inferenceStatus = inferenceResult.status;
         return {
             status: inferenceStatus,
@@ -45,11 +44,9 @@ const TrialPageContent = () => {
             return;
         }
         while (status !== "succeeded" && !isCanceled) {
-            console.log("isCanceled", isCanceled);
-            console.log("status", status);
+          
             inferenceData = await getInferenceData();
             ({ status, predictionTime, output } = inferenceData);
-            console.log("status", status);
             if (status === "processing") {
                 setStatusMessage("Inference is in progress...");
             } else if (status === "starting") {
@@ -65,12 +62,10 @@ const TrialPageContent = () => {
         }
 
         if (status === "succeeded") {
-            console.log("Completed inference");
             setIsWaitingForInference(false);
             while (!output) {
                 inferenceData = await getInferenceData();
                 ({ status, predictionTime, output } = inferenceData);
-                console.log("output", output);
                 if (!output) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 }
@@ -82,7 +77,6 @@ const TrialPageContent = () => {
 
     const cancelInferenceHandler = async () => {
         const cancellationResponse = await cancelReplicateInference(prediction);
-        console.log("cancellationResponse", cancellationResponse);
         setIsCanceled(true);
         // router.push('/lab');
     }

@@ -39,12 +39,10 @@ export async function clientSideUpload(file: File, uploadPath:string): Promise<{
     path: string;
     fullPath: string;
 } | null > {
-    console.log("in file upload")
     if (!file) {
         alert('No file selected');
         return null;
     }
-    console.log("uploadPath", uploadPath)
 
     const supabase = createClient();
 
