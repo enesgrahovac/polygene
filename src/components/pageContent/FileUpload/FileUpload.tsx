@@ -241,25 +241,7 @@ const UploadFileInferencePage: React.FC = () => {
             const inferenceResultObject = JSON.parse(inferenceResult);
 
             getGraphs(clientUploadResult.path);
-            // if (!userId) {
-            //     throw new Error("User ID not found");
-            // }
-
-            // const response = await fetch('/api/saveInference', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({ userId, data: inferenceData })
-            // });
-
-            // if (!response.ok) {
-            //     const error = await response.json();
-            //     throw new Error(error.error || 'Failed to save inference data');
-            // }
-
-            // const responseData = await response.json();
-            // const { url } = responseData;
+           
 
             const inferenceData = {
                 predictionId: predictionId,
@@ -269,8 +251,6 @@ const UploadFileInferencePage: React.FC = () => {
                     predict_time: 0 // Example data may not have metrics
                 },
                 predictionUrl: inferenceResponse ? inferenceResponse?.urls?.get : "",
-                pathToGenotypePhenotypeGraph: '/cachedExamples/example1/genotype_phenotype_clustering.html',
-                pathToPhenotypeGraph: '/cachedExamples/example1/phenotype_clustering.html',
             };
 
             // Update InferenceContext
