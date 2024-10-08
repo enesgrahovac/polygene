@@ -31,7 +31,14 @@ const UploadFileInferencePage: React.FC = () => {
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     // const { userId } = useUser();
-    const { setInference, setPathToGenotypePhenotypeGraph, setPathToPhenotypeGraph, setPhenotypeGraphStatus, setGenotypePhenotypeGraphStatus } = useInference();
+
+    const { setInference, 
+        setPathToGenotypePhenotypeGraph, setPathToPhenotypeGraph, 
+        setPhenotypeGraphStatus, setGenotypePhenotypeGraphStatus,
+        setPathToVolcanoPlot, setVolcanoPlotStatus,
+        setPathToTopGenesBarPlot, setTopGenesBarPlotStatus
+    } = useInference();
+
     const router = useRouter();
     const { triggerConfetti } = useConfetti(); // Destructure triggerConfetti from context
 
@@ -48,24 +55,20 @@ const UploadFileInferencePage: React.FC = () => {
             taskName: "phenotype_prediction",
         };
         const startedPrediction = await startReplicateInference(inferencePayload);
-        console.log("startedPrediction", startedPrediction);
+
         const status = await getReplicateInferenceStatus(startedPrediction.id);
-        console.log("status", status);
+
         return startedPrediction.id;
     };
 
     const startInference = async (file: string, taskName: TaskName) => {
-        console.log("file", file);
         const signedUrl = await createSupabaseSignedUrl(file, 300);
-        console.log("signedUrl", signedUrl);
         const inferencePayload: InferencePayload = {
             inputPath: signedUrl,
             taskName: taskName,
         };
         const startedPrediction = await startReplicateInference(inferencePayload);
-        console.log("startedPrediction", startedPrediction);
         const status = await getReplicateInferenceStatus(startedPrediction.id);
-        console.log("status", status);
         return startedPrediction.id;
     };
 
@@ -75,7 +78,6 @@ const UploadFileInferencePage: React.FC = () => {
         let inferenceCompleted = false;
         while (!inferenceCompleted) {
             inferenceResponse = await getReplicateInferenceStatus(predictionId);
-            console.log("inferenceResponse", inferenceResponse);
             if (inferenceResponse.status === "succeeded") {
                 inferenceCompleted = true;
             } else if (inferenceResponse.status === "failed") {
@@ -90,7 +92,6 @@ const UploadFileInferencePage: React.FC = () => {
 
         const inferenceResult = inferenceResponse ? inferenceResponse.output : null;
 
-        console.log("inferenceResult", inferenceResult);
         return inferenceResult;
     };
 
@@ -122,26 +123,49 @@ const UploadFileInferencePage: React.FC = () => {
             // Set initial status to 'processing'
             setPhenotypeGraphStatus('processing');
             setGenotypePhenotypeGraphStatus('processing');
+            setVolcanoPlotStatus('processing');
+            setTopGenesBarPlotStatus('processing');
 
             const phenotypeGraph = await runInference(fileSignedUrl, "phenotype_clustering");
-            console.log("phenotypeGraph", phenotypeGraph || "no phenotype graph");
 
             if (phenotypeGraph) {
                 const phenotypeUrl = await createDownloadableFile(phenotypeGraph, 'phenotype_clustering.html');
                 setPathToPhenotypeGraph(phenotypeUrl);
                 setPhenotypeGraphStatus('ready');
-                console.log("phenotypeUrl", phenotypeUrl || "no phenotype url");
 
             } else {
                 setPhenotypeGraphStatus('error');
             }
 
+            const topGenesResultString = await runInference(fileSignedUrl, "plot_top_genes_similar_to_phenotype");
+            const topGenesResult = JSON.parse(topGenesResultString);
+
+  
+            // Handle volcano_plot
+            const volcanoPlot = topGenesResult.volcano_plot;
+            if (volcanoPlot) {
+                const volcanoUrl = await createDownloadableFile(volcanoPlot, 'volcano_plot.html');
+                setPathToVolcanoPlot(volcanoUrl);
+                setVolcanoPlotStatus('ready');
+            } else {
+                setVolcanoPlotStatus('error');
+            }
+
+            // Handle top_genes_bar_plot
+            const topGenesBarPlot = topGenesResult.top_genes_bar_plot;
+            if (topGenesBarPlot) {
+                const topGenesBarUrl = await createDownloadableFile(topGenesBarPlot, 'top_genes_bar_plot.html');
+                setPathToTopGenesBarPlot(topGenesBarUrl);
+                setTopGenesBarPlotStatus('ready');
+            } else {
+                setTopGenesBarPlotStatus('error');
+            }
+
+
             const genotypePhenotypeGraph = await runInference(fileSignedUrl, "genotype_phenotype_clustering");
-            console.log("genotypePhenotypeGraph", genotypePhenotypeGraph);
 
             if (genotypePhenotypeGraph) {
                 const genotypeUrl = await createDownloadableFile(genotypePhenotypeGraph, 'genotype_phenotype_clustering.html');
-                console.log("genotypeUrl", genotypeUrl);
                 setPathToGenotypePhenotypeGraph(genotypeUrl);
                 setGenotypePhenotypeGraphStatus('ready');
             } else {
@@ -200,7 +224,6 @@ const UploadFileInferencePage: React.FC = () => {
             let inferenceCompleted = false;
             while (!inferenceCompleted) {
                 inferenceResponse = await getReplicateInferenceStatus(predictionId);
-                console.log("inferenceResponse", inferenceResponse);
                 if (inferenceResponse.status === "succeeded") {
                     inferenceCompleted = true;
                 } else if (inferenceResponse.status === "failed") {
@@ -216,7 +239,6 @@ const UploadFileInferencePage: React.FC = () => {
             const inferenceResult = inferenceResponse ? inferenceResponse.output : null;
             // Load it to an object
             const inferenceResultObject = JSON.parse(inferenceResult);
-            console.log("inferenceResultObject", inferenceResultObject);
 
             getGraphs(clientUploadResult.path);
             // if (!userId) {
@@ -333,16 +355,15 @@ const UploadFileInferencePage: React.FC = () => {
     const fetchAndSetExampleData = async (exampleNumber: number) => {
 
         const exampleUrl = `/cachedExamples/example${exampleNumber}/phenotype_prediction.json`;
+
         // const exampleUrl = `/cachedExamples/example1/phenotype_prediction.json`;
         const response = await fetch(exampleUrl);
-        console.log("response", response);
 
         if (!response.ok) {
             throw new Error('Failed to load example data');
         }
 
         const data = await response.json();
-        console.log("data", data);
 
         // Generate a unique prediction ID for the example
         const predictionId = `example${exampleNumber}-${uuidv4()}`;
@@ -361,9 +382,12 @@ const UploadFileInferencePage: React.FC = () => {
         setInference(inferenceData);
         setPathToGenotypePhenotypeGraph(`/cachedExamples/example${exampleNumber}/genotype_phenotype_clustering.html`);
         setPathToPhenotypeGraph(`/cachedExamples/example${exampleNumber}/phenotype_clustering.html`);
-
+        setPathToVolcanoPlot(`/cachedExamples/example${exampleNumber}/volcano_plot.html`);
+        setPathToTopGenesBarPlot(`/cachedExamples/example${exampleNumber}/top_genes_bar_plot.html`);
         setPhenotypeGraphStatus('ready');
         setGenotypePhenotypeGraphStatus('ready');
+        setVolcanoPlotStatus('ready');
+        setTopGenesBarPlotStatus('ready');
     };
 
     const handleExampleClick = async (exampleNumber: number) => {

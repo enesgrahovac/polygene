@@ -12,7 +12,11 @@ const AnalysisPage = () => {
         pathToGenotypePhenotypeGraph, 
         pathToPhenotypeGraph,
         phenotypeGraphStatus,
-        genotypePhenotypeGraphStatus
+        genotypePhenotypeGraphStatus,
+        pathToVolcanoPlot,
+        volcanoPlotStatus,
+        pathToTopGenesBarPlot,
+        topGenesBarPlotStatus
     } = useInference();
     const router = useRouter();
 
@@ -25,6 +29,18 @@ const AnalysisPage = () => {
     const openPhenotypeClustering = () => {
         if (phenotypeGraphStatus === 'ready') {
             window.open(pathToPhenotypeGraph, '_blank');
+        }
+    };
+
+    const openVolcanoPlot = () => {
+        if (volcanoPlotStatus === 'ready') {
+            window.open(pathToVolcanoPlot, '_blank');
+        }
+    };
+
+    const openTopGenesBarPlot = () => {
+        if (topGenesBarPlotStatus === 'ready') {
+            window.open(pathToTopGenesBarPlot, '_blank');
         }
     };
 
@@ -55,6 +71,20 @@ const AnalysisPage = () => {
                             variant="ghost"
                             style={{ width: "400px" }}
                             disabled={phenotypeGraphStatus !== 'ready'}
+                        />
+                        <Button
+                            label={volcanoPlotStatus === 'ready' ? "Volcano Plot" : "Volcano Plot is processing..."}
+                            onClick={openVolcanoPlot}
+                            variant="ghost"
+                            style={{ width: "400px" }}
+                            disabled={volcanoPlotStatus !== 'ready'}
+                        />
+                        <Button
+                            label={topGenesBarPlotStatus === 'ready' ? "Top Genes Bar Plot" : "Top Genes Bar Plot is processing..."}
+                            onClick={openTopGenesBarPlot}
+                            variant="ghost"
+                            style={{ width: "400px" }}
+                            disabled={topGenesBarPlotStatus !== 'ready'}
                         />
                     </>
                 )}
