@@ -58,16 +58,16 @@ const SideBar = ({ ...rest }: SideBarProps) => {
                 <Button
                     variant="ghost"
                     icon={<Dna style={iconStyle} />}
-                    onClick={() => handleClick("Predictions", () => { router.push("/predictions"); })}
+                    onClick={() => handleClick("Diagnosis", () => { router.push("/diagnosis"); })}
                     className={classnames({ [styles.leftAlignButton]: showFullSideBar, [styles.showLabel]: showFullSideBar })}
-                    label={showFullSideBar ? "Predictions" : undefined}
+                    label={showFullSideBar ? "Diagnosis" : undefined}
                 />
                 <Button
                     variant="ghost"
                     icon={<ChartScatter style={iconStyle} />}
-                    onClick={() => handleClick("Analysis", () => { router.push("/analysis"); })}
+                    onClick={() => handleClick("Discovery", () => { router.push("/discovery"); })}
                     className={classnames({ [styles.leftAlignButton]: showFullSideBar, [styles.showLabel]: showFullSideBar })}
-                    label={showFullSideBar ? "Analysis" : undefined}
+                    label={showFullSideBar ? "Discovery" : undefined}
                 />
             </div>
             <div className={styles.bottomSideBarIcons}>
