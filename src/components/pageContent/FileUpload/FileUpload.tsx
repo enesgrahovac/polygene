@@ -353,8 +353,12 @@ const UploadFileInferencePage: React.FC = () => {
     };
 
     const fetchAndSetExampleData = async (exampleNumber: number) => {
-
-        const exampleUrl = `/cachedExamples/example${exampleNumber}/phenotype_prediction.json`;
+        const urlBases: { [key: number]: string } = {
+            0: "/trials/0dda961a-2a7b-4fe8-ae08-a15531a79409",
+            1: "/trials/28fa4536-6df3-4d14-b422-586979c58674",
+            2: "/trials/77e643a2-34dc-455e-9954-922d230bf2b6",
+        }
+        const exampleUrl = `${urlBases[exampleNumber]}/phenotype_prediction.json`;
 
         // const exampleUrl = `/cachedExamples/example1/phenotype_prediction.json`;
         const response = await fetch(exampleUrl);
@@ -380,10 +384,10 @@ const UploadFileInferencePage: React.FC = () => {
 
         // Update InferenceContext
         setInference(inferenceData);
-        setPathToGenotypePhenotypeGraph(`/cachedExamples/example${exampleNumber}/genotype_phenotype_clustering.html`);
-        setPathToPhenotypeGraph(`/cachedExamples/example${exampleNumber}/phenotype_clustering.html`);
-        setPathToVolcanoPlot(`/cachedExamples/example${exampleNumber}/volcano_plot.html`);
-        setPathToTopGenesBarPlot(`/cachedExamples/example${exampleNumber}/top_genes_bar_plot.html`);
+        setPathToGenotypePhenotypeGraph(`${urlBases[exampleNumber]}/genotype_phenotype_clustering.html`);
+        setPathToPhenotypeGraph(`${urlBases[exampleNumber]}/phenotype_clustering.html`);
+        setPathToVolcanoPlot(`${urlBases[exampleNumber]}/volcano_plot.html`);
+        setPathToTopGenesBarPlot(`${urlBases[exampleNumber]}/top_genes_bar_plot.html`);
         setPhenotypeGraphStatus('ready');
         setGenotypePhenotypeGraphStatus('ready');
         setVolcanoPlotStatus('ready');
