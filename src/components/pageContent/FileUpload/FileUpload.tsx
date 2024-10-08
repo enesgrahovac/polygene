@@ -260,7 +260,7 @@ const UploadFileInferencePage: React.FC = () => {
             triggerConfetti(); // Trigger global confetti
 
             // Navigate to PredictionsPage using client-side routing
-            router.push(`/predictions`);
+            router.push(`/diagnosis`);
 
         }
         catch (error) {
@@ -386,7 +386,7 @@ const UploadFileInferencePage: React.FC = () => {
             await new Promise(resolve => setTimeout(resolve, 2500));
 
             // Navigate to PredictionsPage using client-side routing
-            router.push(`/predictions`);
+            router.push(`/diagnosis`);
 
         } catch (error) {
             console.error("Error loading example data", error);
